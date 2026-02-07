@@ -4,7 +4,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./nixos/programs.nix
+      ./../../nixos/programs.nix
     ];
 
   # Bootloader.

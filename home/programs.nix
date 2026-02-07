@@ -3,6 +3,7 @@
   imports = [    
     ./git.nix
     ./zen-browser.nix
+    ./rofi.nix
     #./vscode.nix
     #./fastfetch.nix
     #./browser/firefox.nix
@@ -12,5 +13,6 @@
 
   home.packages = [
     pkgs.zapzap
+    pkgs.obsidian
   ];
 }
