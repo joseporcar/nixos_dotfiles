@@ -10,6 +10,11 @@ inputs = {
             home-manager.follows = "home-manager";
         };
     };
+    stylix = {
+        url = "github:danth/stylix";
+        inputs.nixpkgs.follows = "nixpkgs";
+        inputs.home-manager.follows = "nixpkgs";
+    };
 
     home-manager = {
         url = "github:nix-community/home-manager";
@@ -32,6 +37,7 @@ outputs = {nixpkgs, home-manager, ...} @inputs : {
                     backupFileExtension = "backup";
                 };
             }
+            inputs.stylix.nixosModules.stylix
         ];
     };
 };

@@ -2,13 +2,13 @@
 let 
   inherit (config.lib.formats.rasi) mkLiteral;
 
-  #bg = mkLiteral "#${config.lib.stylix.colors.base01}80";
-  #accent = mkLiteral "#${config.lib.stylix.colors.base0E}ff"; 
-  #txt = mkLiteral "#${config.lib.stylix.colors.base0D}ff";
-  #txt_accent = mkLiteral "#${config.lib.stylix.colors.base0E}ff";
+  bg = mkLiteral "#${config.lib.stylix.colors.base01}80";
+  accent = mkLiteral "#${config.lib.stylix.colors.base0E}ff"; 
+  txt = mkLiteral "#${config.lib.stylix.colors.base0D}ff";
+  txt_accent = mkLiteral "#${config.lib.stylix.colors.base0E}ff";
 in
 {
-  #stylix.targets.rofi.enable = false;
+  stylix.targets.rofi.enable = false;
   programs.rofi = {
     enable = true;
     cycle = true;
@@ -16,7 +16,6 @@ in
     extraConfig = {
       modi = "drun,window,run";
     };
-    package = pkgs.rofi-wayland;
 
     theme = {
       "*" = {
