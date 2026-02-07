@@ -22,13 +22,13 @@ outputs = {nixpkgs, home-manager, ...} @inputs : {
     nixosConfigurations.pcpronix = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs;};
         modules = [
-            ./hosts/pcpronix/configuration.nix
+            ./devices/pcpronix/configuration.nix
             home-manager.nixosModules.home-manager {
                 home-manager = {
                     extraSpecialArgs = {inherit inputs;};
                     useGlobalPkgs = true;
                     useUserPackages = true;
-                    users.pcpronix = import ./hosts/pcpronix/home.nix;
+                    users.pcpronix = import ./devices/pcpronix/home.nix;
                     backupFileExtension = "backup";
                 };
             }

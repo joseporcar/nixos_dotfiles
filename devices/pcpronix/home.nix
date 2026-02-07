@@ -1,7 +1,7 @@
 { config, pkgs, inputs, ...}:
 {
   imports = [
-    ./../../programs/programs.nix
+    ./../../home/programs.nix
 
   ];
   home = {
