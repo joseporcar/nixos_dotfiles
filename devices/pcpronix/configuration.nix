@@ -2,7 +2,7 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [ #
       ./hardware-configuration.nix
       ./../../nixos/programs.nix
     ];
@@ -25,8 +25,10 @@
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Enable networking
-  networking.networkmanager.enable = true;
-
+  networking.networkmanager = {
+    enable = true;
+  };
+  networking.firewall.checkReversePath = "loose";
   # Set your time zone.
   time.timeZone = "Europe/Amsterdam";
 
@@ -87,6 +89,7 @@
     kitty
     git
     killall
+    eduvpn-client
     
   ];
 

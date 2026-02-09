@@ -9,7 +9,6 @@
     homeDirectory = "/home/pcpronix";
     stateVersion = "24.05";
   };
-  programs.vscode.enable = true;
   programs.home-manager.enable = true;
   home.packages = [
     pkgs.brightnessctl

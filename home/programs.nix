@@ -4,7 +4,7 @@
     ./git.nix
     ./zen-browser.nix
     ./rofi.nix
-    #./vscode.nix
+    ./vscode.nix
     #./fastfetch.nix
     #./browser/firefox.nix
     #./terminal/kitty.nix
