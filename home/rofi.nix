@@ -2,7 +2,7 @@
 let 
   inherit (config.lib.formats.rasi) mkLiteral;
 
-  bg = mkLiteral "#${config.lib.stylix.colors.base01}80";
+  bg = mkLiteral "#${config.lib.stylix.colors.base00}ff";
   accent = mkLiteral "#${config.lib.stylix.colors.base0E}ff"; 
   txt = mkLiteral "#${config.lib.stylix.colors.base0D}ff";
   txt_accent = mkLiteral "#${config.lib.stylix.colors.base0E}ff";
@@ -13,13 +13,16 @@ in
     enable = true;
     cycle = true;
 
+    plugins = [
+      pkgs.rofi-calc
+    ];
     extraConfig = {
-      modi = "drun,window,run";
+      modi = "drun,calc,window";
     };
 
     theme = {
       "*" = {
-        background-color = mkLiteral "#00000001";
+        background-color = mkLiteral "#00000000";
         text-color = txt;
       };
       "configuration" = {
@@ -40,6 +43,7 @@ in
           anchor = "center";
           x-offset = 0;
           y-offset = 0;
+          background-color = mkLiteral "#00000077";
       };
 
       "entry" = {
@@ -48,7 +52,8 @@ in
           horizontal-align = 0;
           placeholder = "Search...";
           blink = true;
-          border = mkLiteral "1px 0px 1px 0px";
+          # old: mkLiteral "1px 0px 1px 0px";
+          border = mkLiteral "2px";
           border-color = accent;
           border-radius = mkLiteral "10px";
           padding = mkLiteral "8px";
@@ -75,12 +80,12 @@ in
         background-color = bg;
 
         border-radius = mkLiteral "10px";
-        border = mkLiteral "1px";
+        border = mkLiteral "2px";
         border-color = accent;
 
         columns = 1;
         lines = 7;
-        spacing = mkLiteral "4px";
+        spacing = mkLiteral "3px";
         cycle = true;
         dynamic = true;
         layout = mkLiteral "vertical";
@@ -121,8 +126,8 @@ in
           border-radius = mkLiteral "10px";
       };
       "element-text" = {
-        text-color = mkLiteral "inherit";
-        horizontal-align = mkLiteral "0.5";
+          text-color = mkLiteral "inherit";
+          horizontal-align = mkLiteral "0.5";
       };
     };
   };
