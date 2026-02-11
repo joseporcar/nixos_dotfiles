@@ -13,6 +13,8 @@
   home.packages = [
     pkgs.brightnessctl
     inputs.ashell.packages.${pkgs.stdenv.hostPlatform.system}.default
+    pkgs.hyprpaper
+    pkgs.hyprshot
     pkgs.nautilus
   ];
 
