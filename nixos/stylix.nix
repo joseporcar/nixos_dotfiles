@@ -2,6 +2,7 @@
 {
   stylix = {
     enable = true;
+    polarity = "light";
     # Wallpapers: 
     image = ./../wallpapers/nixos_wallpaper.png;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-macchiato.yaml";

@@ -3,6 +3,7 @@ description = "Hyprland on Nixos";
 
 inputs = {
     ashell.url = "github:MalpenZibo/ashell";
+    helix.url = "github:helix-editor/helix/master";
     zen-browser = {
         url = "github:0xc000022070/zen-browser-flake";
         inputs = {
@@ -25,6 +26,7 @@ inputs = {
 
 outputs = {nixpkgs, home-manager, ...} @inputs : {
     nixosConfigurations.pcpronix = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
         specialArgs = {inherit inputs;};
         modules = [
             ./devices/pcpronix/configuration.nix

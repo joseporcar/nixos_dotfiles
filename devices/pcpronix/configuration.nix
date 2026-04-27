@@ -5,6 +5,7 @@
     [ #
       ./hardware-configuration.nix
       ./../../nixos/programs.nix
+      ./../../nixos/hyprland.nix
     ];
 
   # Bootloader.
@@ -16,6 +17,7 @@
   };
   boot.loader.efi.canTouchEfiVariables = true;
   boot.supportedFilesystems = [ "ntfs" "exfat" ];
+  boot.kernelParams = [ "usbcore.autosuspend=-1" ];
 
   networking.hostName = "pcpronix"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -32,11 +34,19 @@
   # Set your time zone.
   time.timeZone = "Europe/Amsterdam";
 
+  services.udisks2.enable = true;
+  services.udev = {
 
-  programs.hyprland = {
-    enable = true;
-    # xwayland.enalbe = true;
-  };
+    packages = with pkgs; [
+      qmk
+      qmk-udev-rules # the only relevant
+      qmk_hid
+      via
+      vial
+    ]; # packages
+
+  }; # udev
+  
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";

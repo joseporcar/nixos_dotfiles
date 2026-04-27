@@ -5,6 +5,7 @@
     ./zen-browser.nix
     ./rofi.nix
     ./vscode.nix
+    ./helix.nix
     #./fastfetch.nix
     #./browser/firefox.nix
     #./terminal/kitty.nix
@@ -14,5 +15,6 @@
   home.packages = [
     pkgs.zapzap
     pkgs.obsidian
+    pkgs.hyprsunset
   ];
 }
