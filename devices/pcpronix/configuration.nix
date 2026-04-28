@@ -3,6 +3,7 @@
     imports =[ 
         ./hardware-configuration.nix
         ./../../nixos/hyprland.nix
+        ./../../nixos/kanata.nix
         ./../../nixos/programs.nix
     ];
 
