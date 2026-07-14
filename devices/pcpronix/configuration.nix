@@ -1,141 +1,168 @@
 { config, pkgs, ... }:
 {
-    imports =[ 
-        ./hardware-configuration.nix
-        ./../../nixos/hyprland.nix
-        ./../../nixos/kanata.nix
-        ./../../nixos/programs.nix
-    ];
+  imports = [
+    ./hardware-configuration.nix
+    ./../../nixos/hyprland.nix
+    ./../../nixos/kanata.nix
+    ./../../nixos/programs.nix
+    ./../../nixos/programming_languages/rust.nix
+  ];
 
-    # Bootloader.
-    boot.loader.grub = {
-        enable = true;
-        devices = ["nodev"];
-        efiSupport = true;
-        useOSProber = true;
+  # Bootloader.
+  boot.loader.grub = {
+    enable = true;
+    devices = [ "nodev" ];
+    efiSupport = true;
+    useOSProber = true;
+  };
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.supportedFilesystems = [ "ntfs" "exfat" ];
+  boot.kernelParams = [ "usbcore.autosuspend=-1" ];
+
+  networking.hostName = "pcpronix"; # Define your hostname.
+  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+
+  # Enable networking
+  networking.networkmanager = {
+    enable = true;
+  };
+  networking.firewall.checkReversePath = "loose";
+  # Set your time zone.
+  time.timeZone = "Europe/Amsterdam";
+  # Bluetooth
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
+  services.udisks2.enable = true;
+  services.udev = {
+    packages = with pkgs; [
+      qmk
+      qmk-udev-rules # the only relevant
+      qmk_hid
+      via
+      vial
+      libwacom
+    ]; # packages
+  }; # udev
+  # Enable the NVIDIA driver
+  services.xserver.videoDrivers = [ "nvidia" ];
+  programs.kdeconnect.enable = true;
+  hardware.nvidia = {
+    # THIS IS THE FIX: You must explicitly set this to true or false.
+    # Set to true: If you have an RTX 20-series (Turing architecture) or newer.
+    # Set to false: If you have a GTX 10-series (Pascal architecture) or older.
+    open = true;
+
+    # Required for most modern display servers (Wayland/Hyprland)
+    modesetting.enable = true;
+
+    # Optional: Lets you run the 'nvidia-settings' GUI app
+    nvidiaSettings = true;
+  };
+  fonts.fontconfig = {
+    # Stylix doesn't touch these, so it's safe to define them here
+    antialias = true;
+    hinting = {
+      enable = true;
+      style = "slight";
     };
-    boot.loader.efi.canTouchEfiVariables = true;
-    boot.supportedFilesystems = [ "ntfs" "exfat" ];
-    boot.kernelParams = [ "usbcore.autosuspend=-1" ];
-
-    networking.hostName = "pcpronix"; # Define your hostname.
-    # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-    # Enable networking
-    networking.networkmanager = {
-        enable = true;
+    subpixel = {
+      rgba = "rgb"; # Matches your HP ZBook display
+      lcdfilter = "default";
     };
-    networking.firewall.checkReversePath = "loose";
-    # Set your time zone.
-    time.timeZone = "Europe/Amsterdam";
-    # Bluetooth
-    hardware.bluetooth.enable = true;
-    services.blueman.enable = true;
+  };
+  # Select internationalisation properties.
+  i18n.defaultLocale = "en_US.UTF-8";
 
-    services.udisks2.enable = true;
-    services.udev = {
-        packages = with pkgs; [
-            qmk
-            qmk-udev-rules # the only relevant
-            qmk_hid
-            via
-            vial
-        ]; # packages
-    }; # udev
-    
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "nl_NL.UTF-8";
+    LC_IDENTIFICATION = "nl_NL.UTF-8";
+    LC_MEASUREMENT = "nl_NL.UTF-8";
+    LC_MONETARY = "nl_NL.UTF-8";
+    LC_NAME = "nl_NL.UTF-8";
+    LC_NUMERIC = "nl_NL.UTF-8";
+    LC_PAPER = "nl_NL.UTF-8";
+    LC_TELEPHONE = "nl_NL.UTF-8";
+    LC_TIME = "nl_NL.UTF-8";
+  };
 
-    # Select internationalisation properties.
-    i18n.defaultLocale = "en_US.UTF-8";
+  # Configure keymap in X11
+  console.useXkbConfig = true;
+  services.xserver.xkb = {
+    layout = "us";
+    variant = "colemak_dh";
+    options = "caps:backspace,grp:win_space_toggle,shift:both_capslock,terminate:ctrl_alt_bkspq";
+  };
 
-    i18n.extraLocaleSettings = {
-        LC_ADDRESS = "nl_NL.UTF-8";
-        LC_IDENTIFICATION = "nl_NL.UTF-8";
-        LC_MEASUREMENT = "nl_NL.UTF-8";
-        LC_MONETARY = "nl_NL.UTF-8";
-        LC_NAME = "nl_NL.UTF-8";
-        LC_NUMERIC = "nl_NL.UTF-8";
-        LC_PAPER = "nl_NL.UTF-8";
-        LC_TELEPHONE = "nl_NL.UTF-8";
-        LC_TIME = "nl_NL.UTF-8";
-    };
+  programs.virt-manager.enable = true;
+  users.groups.libvirtd.members = [ "pcpronix" ];
+  # users.users.pcpronix.extraGroups = [ "libvirtd" ];
+  virtualisation.libvirtd.enable = true;
+  virtualisation.libvirtd.qemu.vhostUserPackages = with pkgs; [ virtiofsd ];
+  virtualisation.spiceUSBRedirection.enable = true;
 
-    # Configure keymap in X11
-    console.useXkbConfig = true;
-    services.xserver.xkb = {
-        layout = "us";
-        variant = "colemak_dh";
-        options = "caps:backspace,grp:win_space_toggle,shift:both_capslock,terminate:ctrl_alt_bkspq";
-    };
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.pcpronix = {
+    isNormalUser = true;
+    description = "Jose Porcar";
+    extraGroups = [ "networkmanager" "wheel" "input" ];
+    packages = with pkgs; [ ];
+  };
 
-    programs.virt-manager.enable = true;
-    users.groups.libvirtd.members = ["pcpronix"];
-    # users.users.pcpronix.extraGroups = [ "libvirtd" ];
-    virtualisation.libvirtd.enable = true;
-    virtualisation.libvirtd.qemu.vhostUserPackages = with pkgs; [ virtiofsd ];
-    virtualisation.spiceUSBRedirection.enable = true; 
- 
-    # Define a user account. Don't forget to set a password with ‘passwd’.
-    users.users.pcpronix = {
-        isNormalUser = true;
-        description = "Jose Porcar";
-        extraGroups = [ "networkmanager" "wheel" ];
-        packages = with pkgs; [];
-    };
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
 
-    # Allow unfree packages
-    nixpkgs.config.allowUnfree = true;
+  # List packages installed in system profile. To search, run:
+  # $ nix search wget
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
-    # List packages installed in system profile. To search, run:
-    # $ nix search wget
-    environment.sessionVariables.NIXOS_OZONE_WL = "1";
-
-    environment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgs; [
     #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     #  wget
-        kitty
-        git
-        killall
-        eduvpn-client
-        
-    ];
+    kitty
+    git
+    killall
+    eduvpn-client
+    libwacom
 
-    # Some programs need SUID wrappers, can be configured further or are
-    # started in user sessions.
-    # programs.mtr.enable = true;
-    # programs.gnupg.agent = {
-    #   enable = true;
-    #   enableSSHSupport = true;
-    # };
-    programs.firefox.enable = true;
+  ];
 
-    # List services that you want to enable:
+  # Some programs need SUID wrappers, can be configured further or are
+  # started in user sessions.
+  # programs.mtr.enable = true;
+  # programs.gnupg.agent = {
+  #   enable = true;
+  #   enableSSHSupport = true;
+  # };
+  programs.firefox.enable = true;
 
-    # Enable the OpenSSH daemon.
-    # services.openssh.enable = true;
-    services = {
-        upower = {
-            enable = true;
-            noPollBatteries = true;
-        };
-        power-profiles-daemon.enable = true;
-        
+  # List services that you want to enable:
+
+  # Enable the OpenSSH daemon.
+  # services.openssh.enable = true;
+  services = {
+    upower = {
+      enable = true;
+      noPollBatteries = true;
     };
-    powerManagement.enable = true;
-    powerManagement.powertop.enable = true;
+    power-profiles-daemon.enable = true;
 
-    # Open ports in the firewall.
-    # networking.firewall.allowedTCPPorts = [ ... ];
-    # networking.firewall.allowedUDPPorts = [ ... ];
-    # Or disable the firewall altogether.
-    # networking.firewall.enable = false;
+  };
+  powerManagement.enable = true;
+  powerManagement.powertop.enable = true;
 
-    # This value determines the NixOS release from which the default
-    # settings for stateful data, like file locations and database versions
-    # on your system were taken. It‘s perfectly fine and recommended to leave
-    # this value at the release version of the first install of this system.
-    # Before changing this value read the documentation for this option
-    # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-    nix.settings.experimental-features = ["nix-command" "flakes"];
-    system.stateVersion = "25.11"; # Did you read the comment?
+  # Open ports in the firewall.
+  # networking.firewall.allowedTCPPorts = [ ... ];
+  # networking.firewall.allowedUDPPorts = [ ... ];
+  # Or disable the firewall altogether.
+  # networking.firewall.enable = false;
+
+  # This value determines the NixOS release from which the default
+  # settings for stateful data, like file locations and database versions
+  # on your system were taken. It‘s perfectly fine and recommended to leave
+  # this value at the release version of the first install of this system.
+  # Before changing this value read the documentation for this option
+  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  system.stateVersion = "25.11"; # Did you read the comment?
 
 }

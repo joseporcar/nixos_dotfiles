@@ -1,6 +1,6 @@
 { pkgs, ... }:
 {
-  imports = [    
+  imports = [
     ./git.nix
     ./zen-browser.nix
     ./rofi.nix
@@ -12,9 +12,17 @@
     #./terminal/fish.nix
   ];
 
-  home.packages = [
-    pkgs.zapzap
-    pkgs.obsidian
-    pkgs.hyprsunset
+  home.packages = with pkgs; [
+    zapzap
+    (symlinkJoin {
+      name = "obsidian-wayland";
+      paths = [ obsidian ];
+      buildInputs = [ makeWrapper ];
+      postBuild = ''
+        wrapProgram $out/bin/obsidian \
+          --add-flags "--enable-features=UseOzonePlatform --ozone-platform=wayland"
+      '';
+    })
+    hyprsunset
   ];
 }
